@@ -120,22 +120,22 @@ interface PlayerMap {
   [key: string]: string
 }
 
-const CAPTAIN_SLUG = 'captain'
-const SETTER_SLUG = 'setter'
-const PLAYER_SLUG = 'player'
+const CAPTAIN_SLUG = 'Captain'
+const SETTER_SLUG = 'Setter'
+const PLAYER_SLUG = 'Player'
 
 const PLAYERS: PlayerMap = {
-  'Allen Teruel': 'player',
-  'Carlos Almaguer': 'player',
-  'Darrel Molina': 'player',
+  'Allen Teruel': PLAYER_SLUG,
+  'Carlos Almaguer': PLAYER_SLUG,
+  'Darrel Molina': PLAYER_SLUG,
   'David Layug': SETTER_SLUG,
   'Ian Lizarda': SETTER_SLUG,
-  'Ian Stanley': 'player',
+  'Ian Stanley': PLAYER_SLUG,
   'Martin Sanchez': CAPTAIN_SLUG,
   'Masao Kitamura': PLAYER_SLUG,
-  'Matt Domingo': 'player',
-  'Paulo Madridejos': 'player',
-  'Yasmin Bonilla': 'player',
+  'Matt Domingo': PLAYER_SLUG,
+  'Paulo Madridejos': PLAYER_SLUG,
+  'Yasmin Bonilla': PLAYER_SLUG,
   'Yusuf Van Gieson': CAPTAIN_SLUG,
 }
 
@@ -198,7 +198,9 @@ const Homepage = (props: any) => {
     })
 
     if (setterCount !== numTeams || captainCount !== numTeams) {
-      setAlertMessage(`${numTeams} Setters and ${numTeams} All Captains required`)
+      setAlertMessage(
+        `Exactly ${numTeams} ${SETTER_SLUG}s and ${numTeams} ${CAPTAIN_SLUG}s are required`
+      )
     } else {
       setAlertMessage('')
     }
