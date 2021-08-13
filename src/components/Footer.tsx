@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     textAlign: 'center',
     padding: theme.spacing(3),
-    backgroundColor: theme.palette.primary.lightest,
+    backgroundColor: theme.palette.primary.light,
     position: 'fixed',
     width: '100vw', // width of screen including margin: https://stackoverflow.com/a/25225716
     bottom: 0,
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Footer = props => {
+const Footer = (props: any) => {
   const classes = useStyles(props)
 
   return (

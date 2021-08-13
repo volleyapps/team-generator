@@ -1,10 +1,10 @@
-import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles'
+import { createTheme, responsiveFontSizes } from '@material-ui/core/styles'
 
 // Override the default MUI theme:
 // https://material-ui.com/customization/default-theme/
 // https://material-ui.com/customization/theming/#api
 
-let theme = createMuiTheme({
+let theme = createTheme({
   // palette: { type: 'dark' },
   palette: {
     primary: {

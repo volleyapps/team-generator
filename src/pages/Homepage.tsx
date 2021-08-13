@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 // import Header from '../components/Header'
@@ -17,6 +17,8 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+
+import Alert from '@material-ui/lab/Alert'
 
 const useStyles = makeStyles(
   theme => ({
@@ -42,6 +44,9 @@ const useStyles = makeStyles(
     controls: {},
 
     players: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
       minWidth: '100%',
     },
 
@@ -74,12 +79,27 @@ const useStyles = makeStyles(
       backgroundColor: theme.palette.common.white,
     },
 
+    alert: {
+      marginTop: theme.spacing(1),
+    },
+
+    // Table Styles
     tableContainer: {
       // minWidth: 650,
       maxWidth: '90%',
     },
 
+    '@media (min-width: 1024px)': {
+      tableContainer: {
+        maxWidth: '20%',
+      },
+    },
+
     table: {},
+
+    tableHeader: {
+      backgroundColor: theme.palette.info.light,
+    },
 
     [SETTER_SLUG]: {
       backgroundColor: 'yellow',
@@ -142,8 +162,9 @@ const Homepage = (props: any) => {
   const classes = useStyles(props)
 
   const [numTeams] = useState(2)
-  const [playerPositions] = useState<PlayerMap>(PLAYERS)
+  const [playerPositions, setPlayerPositions] = useState<PlayerMap>(PLAYERS)
   const [teams, setTeams] = useState(MOCK_TEAMS)
+  const [alertMessage, setAlertMessage] = useState('')
 
   const handlePositionChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -153,6 +174,37 @@ const Homepage = (props: any) => {
     console.log(event.currentTarget.name)
     console.log(event.currentTarget.value)
     console.log(name)
+
+    const newPlayerPositions = {
+      ...playerPositions,
+      [name]: event.currentTarget.value,
+    }
+    console.log('NEW:')
+    console.log(newPlayerPositions)
+
+    const playerNames = Object.keys(newPlayerPositions)
+    let setterCount = 0
+    let starCount = 0
+    playerNames.forEach((name, index) => {
+      switch (newPlayerPositions[name]) {
+        case SETTER_SLUG:
+          console.log('SETTER')
+          setterCount++
+          break
+        case ALL_STAR_SLUG:
+          console.log('STAR')
+          starCount++
+          break
+      }
+    })
+
+    if (setterCount !== numTeams || starCount !== numTeams) {
+      setAlertMessage(`${numTeams} Setters and ${numTeams} All Stars required`)
+    } else {
+      setAlertMessage('')
+    }
+
+    setPlayerPositions(newPlayerPositions)
   }
 
   const generateTeams = () => {
@@ -189,12 +241,12 @@ const Homepage = (props: any) => {
 
     // Each team gets a setter randomly
     for (let i = 0; i < numTeams; i++) {
-      newTeams[i].push(shuffledSetters[i])
+      if (shuffledSetters[i]) newTeams[i].push(shuffledSetters[i])
     }
 
     // Each team gets an "All Star" randomly
     for (let i = 0; i < numTeams; i++) {
-      newTeams[i].push(shuffledStars[i])
+      if (shuffledStars[i]) newTeams[i].push(shuffledStars[i])
     }
 
     // Each team randomly gets all the rest of the players
@@ -205,6 +257,12 @@ const Homepage = (props: any) => {
     setTeams(newTeams)
   }
 
+  // Effects
+  useEffect(() => {
+    // TODO: Move this outside the component
+    generateTeams()
+  }, [])
+
   return (
     <div className={classes.root}>
       {/* <Header /> */}
@@ -214,7 +272,7 @@ const Homepage = (props: any) => {
             <TableContainer component={Paper} className={classes.tableContainer}>
               <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableHead>
-                  <TableRow>
+                  <TableRow classes={{ root: classes.tableHeader }}>
                     <TableCell>Player</TableCell>
                     <TableCell align="right">Position</TableCell>
                   </TableRow>
@@ -245,17 +303,16 @@ const Homepage = (props: any) => {
                             <FormControl>
                               <NativeSelect
                                 defaultValue={playerPositions[name]}
-                                // value={state.age}
                                 onChange={e => handlePositionChange(e, name)}
-                                // inputProps={{
-                                //   name: 'age',
-                                //   id: 'age-native-simple',
-                                // }}
                               >
-                                <option aria-label="None" value="" />
+                                {/* <option aria-label="None" value="" /> */}
                                 {POSITIONS.map((position, index) => {
                                   // return <div>{position}</div>
-                                  return <option value={position}>{position}</option>
+                                  return (
+                                    <option key={index} value={position}>
+                                      {position}
+                                    </option>
+                                  )
                                 })}
                               </NativeSelect>
                             </FormControl>
@@ -267,9 +324,19 @@ const Homepage = (props: any) => {
                 </TableBody>
               </Table>
             </TableContainer>
+            {alertMessage && (
+              <Alert severity="error" className={classes.alert}>
+                {alertMessage}
+              </Alert>
+            )}
           </section>
           <section className={clsx(classes.section, classes.controls)}>
-            <Button variant="contained" color="primary" onClick={generateTeams}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={generateTeams}
+              disabled={Boolean(alertMessage)}
+            >
               Generate Teams
             </Button>
           </section>
@@ -277,13 +344,14 @@ const Homepage = (props: any) => {
             {teams.map((team, teamIndex) => {
               return (
                 <TableContainer
+                  key={teamIndex}
                   component={Paper}
                   className={clsx(classes.tableContainer, classes.team)}
                 >
                   <Table className={classes.table} size="small" aria-label="a dense table">
                     <TableHead>
-                      <TableRow>
-                        <TableCell>Player</TableCell>
+                      <TableRow classes={{ root: classes.tableHeader }}>
+                        <TableCell>Team {teamIndex + 1} Players</TableCell>
                         <TableCell align="right">Position</TableCell>
                       </TableRow>
                     </TableHead>
