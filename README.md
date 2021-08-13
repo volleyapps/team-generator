@@ -2,6 +2,9 @@
 
 Create an app that generates "balanced" teams for volleyball.
 
+- Each team has a random setter and a captain
+- All other players are randomly distributed to each team
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

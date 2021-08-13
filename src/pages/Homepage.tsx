@@ -105,7 +105,7 @@ const useStyles = makeStyles(
       backgroundColor: 'yellow',
     },
 
-    [ALL_STAR_SLUG]: {
+    [CAPTAIN_SLUG]: {
       backgroundColor: 'GreenYellow',
     },
 
@@ -120,7 +120,7 @@ interface PlayerMap {
   [key: string]: string
 }
 
-const ALL_STAR_SLUG = 'all-star'
+const CAPTAIN_SLUG = 'captain'
 const SETTER_SLUG = 'setter'
 const PLAYER_SLUG = 'player'
 
@@ -131,17 +131,17 @@ const PLAYERS: PlayerMap = {
   'David Layug': SETTER_SLUG,
   'Ian Lizarda': SETTER_SLUG,
   'Ian Stanley': 'player',
-  'Martin Sanchez': ALL_STAR_SLUG,
+  'Martin Sanchez': CAPTAIN_SLUG,
   'Masao Kitamura': PLAYER_SLUG,
   'Matt Domingo': 'player',
   'Paulo Madridejos': 'player',
   'Yasmin Bonilla': 'player',
-  'Yusuf Van Gieson': ALL_STAR_SLUG,
+  'Yusuf Van Gieson': CAPTAIN_SLUG,
 }
 
 const PLAYER_NAMES = Object.keys(PLAYERS)
 
-const POSITIONS = [SETTER_SLUG, ALL_STAR_SLUG, PLAYER_SLUG]
+const POSITIONS = [SETTER_SLUG, CAPTAIN_SLUG, PLAYER_SLUG]
 
 const MOCK_TEAMS = [
   ['Team 1 Player 1', 'Team 1 Player 2'],
@@ -184,22 +184,21 @@ const Homepage = (props: any) => {
 
     const playerNames = Object.keys(newPlayerPositions)
     let setterCount = 0
-    let starCount = 0
+    let captainCount = 0
     playerNames.forEach((name, index) => {
       switch (newPlayerPositions[name]) {
         case SETTER_SLUG:
           console.log('SETTER')
           setterCount++
           break
-        case ALL_STAR_SLUG:
-          console.log('STAR')
-          starCount++
+        case CAPTAIN_SLUG:
+          captainCount++
           break
       }
     })
 
-    if (setterCount !== numTeams || starCount !== numTeams) {
-      setAlertMessage(`${numTeams} Setters and ${numTeams} All Stars required`)
+    if (setterCount !== numTeams || captainCount !== numTeams) {
+      setAlertMessage(`${numTeams} Setters and ${numTeams} All Captains required`)
     } else {
       setAlertMessage('')
     }
@@ -210,9 +209,9 @@ const Homepage = (props: any) => {
   const generateTeams = () => {
     const newTeams: string[][] = []
 
-    // Filter all the players for setters, all stars, and players
+    // Filter all the players for setters, all captains, and players
     const setters: string[] = []
-    const stars: string[] = []
+    const captains: string[] = []
     const players: string[] = []
 
     PLAYER_NAMES.forEach((name, index) => {
@@ -223,15 +222,15 @@ const Homepage = (props: any) => {
         case PLAYER_SLUG:
           players.push(name)
           break
-        case ALL_STAR_SLUG:
-          stars.push(name)
+        case CAPTAIN_SLUG:
+          captains.push(name)
           break
         default:
       }
     })
 
     const shuffledSetters: string[] = shuffle(setters)
-    const shuffledStars: string[] = shuffle(stars)
+    const shuffledCaptains: string[] = shuffle(captains)
     const shuffledPlayers: string[] = shuffle(players)
 
     // Create each new team
@@ -244,9 +243,9 @@ const Homepage = (props: any) => {
       if (shuffledSetters[i]) newTeams[i].push(shuffledSetters[i])
     }
 
-    // Each team gets an "All Star" randomly
+    // Each team gets an "All Captain" randomly
     for (let i = 0; i < numTeams; i++) {
-      if (shuffledStars[i]) newTeams[i].push(shuffledStars[i])
+      if (shuffledCaptains[i]) newTeams[i].push(shuffledCaptains[i])
     }
 
     // Each team randomly gets all the rest of the players
@@ -286,7 +285,7 @@ const Homepage = (props: any) => {
                       case SETTER_SLUG:
                         customClass = classes[position]
                         break
-                      case ALL_STAR_SLUG:
+                      case CAPTAIN_SLUG:
                         customClass = classes[position]
                         break
                       case PLAYER_SLUG:
@@ -364,7 +363,7 @@ const Homepage = (props: any) => {
                           case SETTER_SLUG:
                             customClass = classes[position]
                             break
-                          case ALL_STAR_SLUG:
+                          case CAPTAIN_SLUG:
                             customClass = classes[position]
                             break
                           case PLAYER_SLUG:
