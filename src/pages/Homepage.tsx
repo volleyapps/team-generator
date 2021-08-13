@@ -12,7 +12,6 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 
 import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
 import NativeSelect from '@material-ui/core/NativeSelect'
 
 const useStyles = makeStyles(
