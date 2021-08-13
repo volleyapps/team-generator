@@ -80,6 +80,18 @@ const useStyles = makeStyles(
     },
 
     table: {},
+
+    [SETTER_SLUG]: {
+      backgroundColor: 'yellow',
+    },
+
+    [ALL_STAR_SLUG]: {
+      backgroundColor: 'GreenYellow',
+    },
+
+    [PLAYER_SLUG]: {
+      backgroundColor: 'white',
+    },
   }),
   { name: 'Homepage' }
 )
@@ -129,8 +141,19 @@ const shuffle = (arr: any[]) => {
 const Homepage = (props: any) => {
   const classes = useStyles(props)
 
-  const [numTeams, setNumTeams] = useState(2)
+  const [numTeams] = useState(2)
+  const [playerPositions] = useState<PlayerMap>(PLAYERS)
   const [teams, setTeams] = useState(MOCK_TEAMS)
+
+  const handlePositionChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+    name: string
+  ): void => {
+    console.log('HANDLE POSITION CHANGE')
+    console.log(event.currentTarget.name)
+    console.log(event.currentTarget.value)
+    console.log(name)
+  }
 
   const generateTeams = () => {
     const newTeams: string[][] = []
@@ -140,8 +163,8 @@ const Homepage = (props: any) => {
     const stars: string[] = []
     const players: string[] = []
 
-    PLAYER_NAMES.map((name, index) => {
-      switch (PLAYERS[name]) {
+    PLAYER_NAMES.forEach((name, index) => {
+      switch (playerPositions[name]) {
         case SETTER_SLUG:
           setters.push(name)
           break
@@ -170,8 +193,14 @@ const Homepage = (props: any) => {
     }
 
     // Each team gets an "All Star" randomly
+    for (let i = 0; i < numTeams; i++) {
+      newTeams[i].push(shuffledStars[i])
+    }
 
     // Each team randomly gets all the rest of the players
+    for (let i = 0; i < players.length; i++) {
+      newTeams[i % numTeams].push(shuffledPlayers[i])
+    }
 
     setTeams(newTeams)
   }
@@ -191,34 +220,50 @@ const Homepage = (props: any) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {PLAYER_NAMES.sort().map((name, index) => (
-                    <TableRow key={name}>
-                      <TableCell component="th" scope="row">
-                        {name}
-                      </TableCell>
-                      <TableCell align="right">
-                        <div>
-                          <FormControl>
-                            <NativeSelect
-                              defaultValue={PLAYERS[name]}
-                              // value={state.age}
-                              // onChange={handleChange}
-                              // inputProps={{
-                              //   name: 'age',
-                              //   id: 'age-native-simple',
-                              // }}
-                            >
-                              <option aria-label="None" value="" />
-                              {POSITIONS.map((position, index) => {
-                                // return <div>{position}</div>
-                                return <option value={position}>{position}</option>
-                              })}
-                            </NativeSelect>
-                          </FormControl>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {PLAYER_NAMES.sort().map((name, index) => {
+                    const position = playerPositions[name]
+
+                    let customClass
+                    switch (position) {
+                      case SETTER_SLUG:
+                        customClass = classes[position]
+                        break
+                      case ALL_STAR_SLUG:
+                        customClass = classes[position]
+                        break
+                      case PLAYER_SLUG:
+                        customClass = classes[position]
+                    }
+
+                    return (
+                      <TableRow key={name} classes={{ root: customClass }}>
+                        <TableCell component="th" scope="row">
+                          {name}
+                        </TableCell>
+                        <TableCell align="right">
+                          <div>
+                            <FormControl>
+                              <NativeSelect
+                                defaultValue={playerPositions[name]}
+                                // value={state.age}
+                                onChange={e => handlePositionChange(e, name)}
+                                // inputProps={{
+                                //   name: 'age',
+                                //   id: 'age-native-simple',
+                                // }}
+                              >
+                                <option aria-label="None" value="" />
+                                {POSITIONS.map((position, index) => {
+                                  // return <div>{position}</div>
+                                  return <option value={position}>{position}</option>
+                                })}
+                              </NativeSelect>
+                            </FormControl>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -244,13 +289,27 @@ const Homepage = (props: any) => {
                     </TableHead>
                     <TableBody>
                       {team.map((playerName, playerIndex) => {
+                        const position = playerPositions[playerName]
+
+                        let customClass
+                        switch (position) {
+                          case SETTER_SLUG:
+                            customClass = classes[position]
+                            break
+                          case ALL_STAR_SLUG:
+                            customClass = classes[position]
+                            break
+                          case PLAYER_SLUG:
+                            customClass = classes[position]
+                        }
+
                         return (
-                          <TableRow key={playerName}>
+                          <TableRow key={playerName} classes={{ root: customClass }}>
                             <TableCell component="th" scope="row">
                               {playerName}
                             </TableCell>
                             <TableCell align="right">
-                              <div>{PLAYERS[playerName]}</div>
+                              <div>{playerPositions[playerName]}</div>
                             </TableCell>
                           </TableRow>
                         )
