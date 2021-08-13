@@ -91,7 +91,7 @@ const useStyles = makeStyles(
 
     '@media (min-width: 1024px)': {
       tableContainer: {
-        maxWidth: '20%',
+        maxWidth: '25%',
       },
     },
 
@@ -134,9 +134,9 @@ const PLAYERS: PlayerMap = {
   'Martin Sanchez': CAPTAIN_SLUG,
   'Masao Kitamura': PLAYER_SLUG,
   'Matt Domingo': PLAYER_SLUG,
-  'Paulo Madridejos': PLAYER_SLUG,
+  'Paulo Madridejos': CAPTAIN_SLUG,
   'Yasmin Bonilla': PLAYER_SLUG,
-  'Yusuf Van Gieson': CAPTAIN_SLUG,
+  'William Martins': PLAYER_SLUG,
 }
 
 const PLAYER_NAMES = Object.keys(PLAYERS)
@@ -204,7 +204,6 @@ const Homepage = (props: any) => {
     } else {
       setAlertMessage('')
     }
-
     setPlayerPositions(newPlayerPositions)
   }
 
