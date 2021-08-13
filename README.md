@@ -1,3 +1,7 @@
+# Purpose
+
+Create an app that generates "balanced" teams for volleyball.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
